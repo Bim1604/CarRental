@@ -5,10 +5,12 @@
  */
 package dangtd.servlet;
 
-import dangtd.carrentaldao.TblUserDAO;
+import dangtd.carrentaldao.TblCarDAO;
+import dangtd.carrentaldto.TblCarDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,16 +21,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Admin
  */
-public class LoginServlet extends HttpServlet {
-
-    private final String loginPage = "";
-    private final String searchPage = "CarLoad";
-
+public class CarLoadServlet extends HttpServlet {
+    private final String searchPage = "search";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,20 +42,17 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String username = request.getParameter("txtUsername");
-        String password = request.getParameter("txtPassword");
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
-        String url = map.get(loginPage);
+        HttpSession session = request.getSession(true);
+        String url = map.get(searchPage);
         try {
-            TblUserDAO dao = new TblUserDAO();
-            String name = dao.checkLogin(username, password);
-            if (name.length() > 0) {
-                request.setAttribute("NAME", name);
-                url = map.get(searchPage);
-            }
+            TblCarDAO carDAO = new TblCarDAO();
+            carDAO.loadCar();
+            List<TblCarDTO> listCar = carDAO.getListCar();
+            session.setAttribute("LISTCAR", listCar);
         } catch (SQLException | NamingException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CarLoadServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
