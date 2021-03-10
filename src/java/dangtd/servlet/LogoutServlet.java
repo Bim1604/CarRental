@@ -5,30 +5,21 @@
  */
 package dangtd.servlet;
 
-import dangtd.carrentaldao.TblUserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Admin
  */
-public class LoginServlet extends HttpServlet {
+public class LogoutServlet extends HttpServlet {
 
-    private final String loginPage = "login";
     private final String carPage = "";
-    private final String activePage = "login";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,42 +34,12 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String username = request.getParameter("txtUsername");
-        String password = request.getParameter("txtPassword");
-        ServletContext context = request.getServletContext();
-        Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
-        String url = map.get(loginPage);
+        String url = carPage;
         try {
-            if (username.isEmpty() || password.isEmpty()) {
-                String msg = "Please fill all information !!";
-                request.setAttribute("LOGINFAILED", msg);
-            } else {
-                System.out.println("0");
-                TblUserDAO dao = new TblUserDAO();
-                String name = dao.checkLogin(username, password);
-                if (name != null) {
-                    System.out.println("1");
-                    boolean statusAccount = dao.checkStatusAccount(username);
-                    if (statusAccount) {
-                        System.out.println("2");
-                        request.setAttribute("NAME", name);
-                        url = map.get(carPage);
-                    } else {
-                        System.out.println("3");
-                        request.setAttribute("NAME", name);
-                        url = map.get(activePage);
-                    }
-                } else {
-                    System.out.println("4");
-                    String msg = "Invalid password or username !!";
-                    request.setAttribute("LOGINFAILED", msg);
-                }
-            }
-        } catch (SQLException | NamingException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+            HttpSession session = request.getSession();
+            session.invalidate();
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            response.sendRedirect(url);
             out.close();
         }
     }

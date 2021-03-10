@@ -24,11 +24,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Admin
  */
-public class LoginServlet extends HttpServlet {
+public class CreateAccountServlet extends HttpServlet {
 
     private final String loginPage = "login";
-    private final String carPage = "";
-    private final String activePage = "login";
+    private final String createPage = "create";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,39 +42,41 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String username = request.getParameter("txtUsername");
+        String email = request.getParameter("txtEmail");
         String password = request.getParameter("txtPassword");
+        String phone = request.getParameter("txtPhone");
+        String name = request.getParameter("txtName");
+        String address = request.getParameter("txtAddress");
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
-        String url = map.get(loginPage);
+        String url = map.get(loginPage);;
         try {
-            if (username.isEmpty() || password.isEmpty()) {
-                String msg = "Please fill all information !!";
-                request.setAttribute("LOGINFAILED", msg);
-            } else {
-                System.out.println("0");
-                TblUserDAO dao = new TblUserDAO();
-                String name = dao.checkLogin(username, password);
-                if (name != null) {
-                    System.out.println("1");
-                    boolean statusAccount = dao.checkStatusAccount(username);
-                    if (statusAccount) {
-                        System.out.println("2");
-                        request.setAttribute("NAME", name);
-                        url = map.get(carPage);
+            if (!email.isEmpty() && !password.isEmpty() && !phone.isEmpty() && !name.isEmpty() && !address.isEmpty()) {
+                TblUserDAO userDAO = new TblUserDAO();
+                boolean checkExist = userDAO.checkExistAccount(email);
+                if (!checkExist) {
+                    boolean rs = userDAO.createNewAccount(email, password, phone, name, address);
+                    if (rs == true) {
+                        String msg = "Create Successful";
+                        request.setAttribute("CreateSuccess", msg);
                     } else {
-                        System.out.println("3");
-                        request.setAttribute("NAME", name);
-                        url = map.get(activePage);
+                        url = map.get(createPage);
+                        String msg = "Create Failded";
+                        request.setAttribute("CreateFaild", msg);
                     }
                 } else {
-                    System.out.println("4");
-                    String msg = "Invalid password or username !!";
-                    request.setAttribute("LOGINFAILED", msg);
+                    url = map.get(createPage);
+                    String msg = "Existed Email !!";
+                    request.setAttribute("CreateFaild", msg);
                 }
+            } else {
+                url = map.get(createPage);
+                String msg = "Please fill all information !!";
+                request.setAttribute("CreateFaild", msg);
             }
+
         } catch (SQLException | NamingException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreateAccountServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

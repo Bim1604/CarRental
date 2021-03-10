@@ -22,16 +22,21 @@ import javax.naming.NamingException;
  */
 public class TblCarDAO implements Serializable {
 
-    public void loadCar() throws SQLException, NamingException {
+    public void loadCar(int pageIndex, int pageSize) throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
             con = DBHelper.makeConnection();
-            String sql = "Select carID, carName, color, year, category, price, quantity "
-                    + "From tblCar";
+            String sql = "With x as (select ROW_NUMBER() over (order by carID) as r, "
+                    + "carID,carName, color, year, category, price, quantity "
+                    + "From tblCar) "
+                    + "Select carID,carName, color, year, category, price, quantity "
+                    + "From x Where r Between ? AND ?";
             ps = con.prepareStatement(sql);
+            ps.setInt(1, pageIndex * pageSize - (pageSize -1));
+            ps.setInt(2, pageIndex * pageSize);
             rs = ps.executeQuery();
             while (rs.next()) {
                 String carID = rs.getString(1);
@@ -42,7 +47,7 @@ public class TblCarDAO implements Serializable {
                 float price = rs.getFloat(6);
                 int quantity = rs.getInt(7);
                 TblCarDTO dto = new TblCarDTO(carID, carName, color, year, category, price, quantity);
-                if (this.listCar == null){
+                if (this.listCar == null) {
                     this.listCar = new ArrayList<>();
                 }
                 this.listCar.add(dto);
@@ -64,6 +69,32 @@ public class TblCarDAO implements Serializable {
     public List<TblCarDTO> getListCar() {
         return listCar;
     }
-    
-    
+
+    public int countTotalCar() throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "Select count(carID) "
+                    + "From tblCar";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return 0;
+    }
 }

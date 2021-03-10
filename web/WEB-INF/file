@@ -1,4 +1,7 @@
  =CarLoadServlet
 Login=LoginServlet
-CarLoad=CarLoadServlet
 search=search.jsp
+login=login.jsp
+Log=LogoutServlet
+Create=CreateAccountServlet
+create=createAccount.jsp

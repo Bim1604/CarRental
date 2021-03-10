@@ -28,7 +28,9 @@ import javax.servlet.http.HttpSession;
  * @author Admin
  */
 public class CarLoadServlet extends HttpServlet {
+
     private final String searchPage = "search";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,17 +47,32 @@ public class CarLoadServlet extends HttpServlet {
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
         HttpSession session = request.getSession(true);
+        int indexPage = 1;
         String url = map.get(searchPage);
+//        System.out.println(request.getParameter("txtPageIndex"));
+        if (request.getParameter("txtPageIndex") != null) {
+            indexPage = Integer.parseInt(request.getParameter("txtPageIndex"));
+//            url = "?txtPageIndex=" + indexPage;
+        }
+//        System.out.println("p " + indexPage);
+        int sizePage = 1;
         try {
             TblCarDAO carDAO = new TblCarDAO();
-            carDAO.loadCar();
+            int total = carDAO.countTotalCar();
+            int pageEnd = total / sizePage;
+            if (total % sizePage != 0) {
+                pageEnd++;
+            }
+            carDAO.loadCar(indexPage, sizePage);
             List<TblCarDTO> listCar = carDAO.getListCar();
             session.setAttribute("LISTCAR", listCar);
+            session.setAttribute("CARPAGEEND", pageEnd);
         } catch (SQLException | NamingException ex) {
             Logger.getLogger(CarLoadServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
+//            response.sendRedirect(url);
             out.close();
         }
     }
