@@ -22,7 +22,7 @@
                     Car Rent
                 </li>
                 <li>
-                    <a href="">Find Car</a>                    
+                    <a href="" >Find Car</a>                    
                 </li>
                 <li>
                     <a href="facebook.com"><i class="fa fa-facebook-square" aria-hidden="true">FaceBook</i></a> 
@@ -35,10 +35,10 @@
                 </li>
             </ul>
             <ul>
-                <c:if test="${not empty requestScope.NAME}">
+                <c:if test="${not empty sessionScope.NAME}">
                     <li>
                         <font>
-                        Welcome, ${requestScope.NAME}
+                        Welcome, ${sessionScope.NAME}
                         </font>
                     </li>
                     <li>
@@ -48,7 +48,7 @@
                     </li>
 
                 </c:if>
-                <c:if test="${empty requestScope.NAME}">
+                <c:if test="${empty sessionScope.NAME}">
                     <li>
                         <form action="login">
                             <input type="submit" value="Login" />
@@ -59,60 +59,62 @@
         </div>
         <!-- Load Car Data -->
         <c:set var="result" value="${sessionScope.LISTCAR}" />
-        <form action="">
-            <c:if test="${not empty result}">
-                <div class="searchBody">
-                    <table border="1">
-                        <thead>
+
+        <c:if test="${not empty result}">
+            <div class="searchBody">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Car Name</th>
+                            <th>Color</th>
+                            <th>Year</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <form action="">
+                        <c:forEach var="dto" items="${result}" varStatus="counter">
                             <tr>
-                                <th>No.</th>
-                                <th>Car Name</th>
-                                <th>Color</th>
-                                <th>Year</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
+                                <td>
+                                    ${counter.count}
+                                </td>
+                                <td>
+                                    ${dto.carName}
+                                </td>
+                                <td>
+                                    ${dto.color}
+                                </td>
+                                <td>
+                                    ${dto.year}
+                                </td>
+                                <td>
+                                    ${dto.category}
+                                </td>
+                                <td>
+                                    ${dto.price}
+                                </td>
+                                <td>
+                                    ${dto.quantity}
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="dto" items="${result}" varStatus="counter">
-                                <tr>
-                                    <td>
-                                        ${counter.count}
-                                    </td>
-                                    <td>
-                                        ${dto.carName}
-                                    </td>
-                                    <td>
-                                        ${dto.color}
-                                    </td>
-                                    <td>
-                                        ${dto.year}
-                                    </td>
-                                    <td>
-                                        ${dto.category}
-                                    </td>
-                                    <td>
-                                        ${dto.price}
-                                    </td>
-                                    <td>
-                                        ${dto.quantity}
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        <td>
-                            <c:forEach begin="1" end="${sessionScope.CARPAGEEND}" var="indexPage">
-                                <div>
-                                    <input type="submit" value="${indexPage}" name="txtPageIndex" />
-                                </div>
-                            </c:forEach>
-                        </td>
-                        </tbody>
-                    </table>    
-                </div>            
-            </c:if>
-        </form>
+                        </c:forEach>
+                    </form>                                 
+                    </tbody>
+                </table>    
+            </div>  
+            <div>
+                <c:forEach begin="1" end="${sessionScope.CARPAGEEND}" var="indexPage">
+                    <div>
+                        <a href="CarLoadServlet?txtPageIndex=${indexPage}">${indexPage}</a>
+                    </div>
+                </c:forEach>
+            </div>       
+        </c:if>
+
         <!-- Load Data Search -->
-        
+
     </body>
 </html>

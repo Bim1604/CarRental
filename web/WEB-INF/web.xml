@@ -28,6 +28,10 @@
         <servlet-name>CreateAccountServlet</servlet-name>
         <servlet-class>dangtd.servlet.CreateAccountServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginFacebookServlet</servlet-name>
+        <servlet-class>dangtd.loginfb.LoginFacebookServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -43,6 +47,10 @@
     <servlet-mapping>
         <servlet-name>CreateAccountServlet</servlet-name>
         <url-pattern>/CreateAccountServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginFacebookServlet</servlet-name>
+        <url-pattern>/LoginFacebookServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

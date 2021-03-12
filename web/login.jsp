@@ -14,7 +14,7 @@
         <c:if test="${not empty requestScope.CreateSuccess}">
             onload="alertCreateSuccessfulMessage()"
         </c:if>
-            <c:if test="${not empty requestScope.LOGINFAILED}">
+        <c:if test="${not empty requestScope.LOGINFAILED}">
             onload="alertLoginFailedMessage()"
         </c:if>
         >
@@ -34,13 +34,19 @@
             <div>
                 <a href="createAccount.jsp"> Create a new account</a>
             </div>
+            <div>
+                <!--                <a href="https://www.facebook.com/dialog/oauth?client_id=897988791001126&redirect_uri=https://localhost:8084/CarRental/loginFB">
+                                    Login Facebook
+                                </a>-->
+                <a href="loginFB.jsp">Facebook</a>
+            </div>
         </form>
-        <script>            
+        <script>
             function alertCreateSuccessfulMessage() {
-                 alert("${requestScope.CreateSuccess}");
+                alert("${requestScope.CreateSuccess}");
             }
             function alertLoginFailedMessage() {
-                 alert("${requestScope.LOGINFAILED}");
+                alert("${requestScope.LOGINFAILED}");
             }
         </script>
     </body>

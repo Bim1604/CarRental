@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -47,29 +48,25 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("txtPassword");
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
+        HttpSession session = request.getSession(true);
         String url = map.get(loginPage);
         try {
             if (username.isEmpty() || password.isEmpty()) {
                 String msg = "Please fill all information !!";
                 request.setAttribute("LOGINFAILED", msg);
             } else {
-                System.out.println("0");
                 TblUserDAO dao = new TblUserDAO();
                 String name = dao.checkLogin(username, password);
                 if (name != null) {
-                    System.out.println("1");
                     boolean statusAccount = dao.checkStatusAccount(username);
                     if (statusAccount) {
-                        System.out.println("2");
-                        request.setAttribute("NAME", name);
+                        session.setAttribute("NAME", name);
                         url = map.get(carPage);
                     } else {
-                        System.out.println("3");
-                        request.setAttribute("NAME", name);
+                        session.setAttribute("NAME", name);
                         url = map.get(activePage);
                     }
                 } else {
-                    System.out.println("4");
                     String msg = "Invalid password or username !!";
                     request.setAttribute("LOGINFAILED", msg);
                 }
