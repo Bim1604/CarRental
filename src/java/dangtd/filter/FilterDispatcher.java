@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.log4j.BasicConfigurator;
 
 /**
  *
@@ -104,7 +105,7 @@ public class FilterDispatcher implements Filter {
 
         HttpServletRequest req = (HttpServletRequest) request;
         String uri = req.getRequestURI();
-        String url = "";
+        String url;
         ServletContext context = request.getServletContext();
         try {
             Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
@@ -114,10 +115,9 @@ public class FilterDispatcher implements Filter {
             if (url != null) {
                 RequestDispatcher rq = req.getRequestDispatcher(url);
                 rq.forward(request, response);
-            }  else {
-                chain.doFilter(request, response);
             }
-        } catch (IOException | ServletException e) {
+        } catch (Throwable e) {
+            BasicConfigurator.configure();
         }
     }
 

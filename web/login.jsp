@@ -32,13 +32,17 @@
                 <input type="submit" value="Login" />
             </div>
             <div>
-                <a href="createAccount.jsp"> Create a new account</a>
+                <div>
+                    <a href="createAccount.jsp"> Create a new account</a>
+                </div>
+                <div>
+                    <a href="https://www.facebook.com/dialog/oauth?client_id=133206675390895&redirect_uri=http://localhost:8084/CarRental/Create">Create Account with Facebook</a>
+                </div>                
             </div>
             <div>
-                <!--                <a href="https://www.facebook.com/dialog/oauth?client_id=897988791001126&redirect_uri=https://localhost:8084/CarRental/loginFB">
-                                    Login Facebook
-                                </a>-->
-                <a href="loginFB.jsp">Facebook</a>
+                <a href="https://www.facebook.com/dialog/oauth?client_id=133206675390895&redirect_uri=http://localhost:8084/CarRental/Login">
+                    Login Facebook
+                </a>
             </div>
         </form>
         <script>

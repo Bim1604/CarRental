@@ -50,6 +50,70 @@ public class TblUserDAO implements Serializable {
         }
         return null;
     }
+    public String checkLogin(String username) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "Select name "
+                    + "From tblUser "
+                    + "Where email = ?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, username);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                String name = rs.getString(1);
+                return name;
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return null;
+    }
+//    Lấy role
+    public boolean getRole(String email) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBHelper.makeConnection();
+            if (con != null) {
+                String sql = "SELECT roleID "
+                        + "FROM tblUser "
+                        + "WHERE email = ?";
+                ps = con.prepareStatement(sql);
+                ps.setString(1, email);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    boolean role = rs.getBoolean(1);
+                    return role;
+                }
+            }
+        } finally {
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+            if (rs != null) {
+                rs.close();
+            }
+        }
+        return false;
+    }
+    
 //    Kiểm tra trạng thái tài khoản
      public boolean checkStatusAccount(String username) throws SQLException, NamingException {
         Connection con = null;
@@ -89,8 +153,8 @@ public class TblUserDAO implements Serializable {
         try {
             con = DBHelper.makeConnection();
             String sql = "Insert into tblUser "
-                    + "(email, password, phone, name, address, createDate, status) "
-                    + "Values (?,?,?,?,?,CURRENT_TIMESTAMP,?)";
+                    + "(email, password, phone, name, address, createDate, statusID, roleID) "
+                    + "Values (?,?,?,?,?,CURRENT_TIMESTAMP,?,?)";
             ps = con.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, password);
@@ -98,7 +162,10 @@ public class TblUserDAO implements Serializable {
             ps.setString(4, name);
             ps.setString(5, address);
             ps.setBoolean(6, false);
+            ps.setBoolean(7, false);
+            System.out.println("ok");
             int row = ps.executeUpdate();
+            System.out.println("thanh cong");
             if (row > 0) {
                 return true;
             }

@@ -30,12 +30,12 @@ public class TblCarDAO implements Serializable {
         try {
             con = DBHelper.makeConnection();
             String sql = "With x as (select ROW_NUMBER() over (order by carID) as r, "
-                    + "carID,carName, color, year, category, price, quantity "
+                    + "carID,carName, color, year, categoryID, price, quantity, image "
                     + "From tblCar) "
-                    + "Select carID,carName, color, year, category, price, quantity "
+                    + "Select carID,carName, color, year, categoryID, price, quantity, image "
                     + "From x Where r Between ? AND ?";
             ps = con.prepareStatement(sql);
-            ps.setInt(1, pageIndex * pageSize - (pageSize -1));
+            ps.setInt(1, pageIndex * pageSize - (pageSize - 1));
             ps.setInt(2, pageIndex * pageSize);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -43,10 +43,13 @@ public class TblCarDAO implements Serializable {
                 String carName = rs.getString(2);
                 String color = rs.getString(3);
                 String year = rs.getString(4);
-                String category = rs.getString(5);
+                String categoryID = rs.getString(5);
+                String img = rs.getString(6);
+                TblCategoryDAO cateDAO = new TblCategoryDAO();
+                String categoryName = cateDAO.getCategoryName(categoryID);
                 float price = rs.getFloat(6);
                 int quantity = rs.getInt(7);
-                TblCarDTO dto = new TblCarDTO(carID, carName, color, year, category, price, quantity);
+                TblCarDTO dto = new TblCarDTO(carID, carName, color, year, categoryName, price, quantity, img);
                 if (this.listCar == null) {
                     this.listCar = new ArrayList<>();
                 }
@@ -96,5 +99,31 @@ public class TblCarDAO implements Serializable {
             }
         }
         return 0;
+    }
+
+    public void searchCar(String carName) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "with x as (select ROW_NUMBER() over (order by carID) as r, "
+                    + "carID,carName, color, year, categoryID, price, quantity "
+                    + "From tblCar "
+                    + "Where carName = ? or  categoryID = ?) "
+                    + "Select carID,carName, color, year, categoryID, price, quantity "
+                    + "From x Where r BETWEEN ? AND ?";
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
     }
 }

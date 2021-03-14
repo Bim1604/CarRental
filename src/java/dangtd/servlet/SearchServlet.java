@@ -5,33 +5,18 @@
  */
 package dangtd.servlet;
 
-import dangtd.carrentaldao.TblCarDAO;
-import dangtd.carrentaldao.TblCategoryDAO;
-import dangtd.carrentaldto.TblCarDTO;
-import dangtd.carrentaldto.TblCategoryDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Admin
  */
-public class CarLoadServlet extends HttpServlet {
-
-    private final String cateServlet = "search";
+public class SearchServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,37 +31,11 @@ public class CarLoadServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        ServletContext context = request.getServletContext();
-        Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
-        HttpSession session = request.getSession(true);
-        int indexPage = 1;
-        String url = map.get(cateServlet);
-        if (request.getParameter("txtPageIndex") != null) {
-            indexPage = Integer.parseInt(request.getParameter("txtPageIndex"));
-        }
-        int sizePage = 1;
+        String searchValue = request.getParameter("txtSearchValue");
+        String categoryID = request.getParameter("txtCate");
         try {
-//            load car
-            TblCarDAO carDAO = new TblCarDAO();
-            int total = carDAO.countTotalCar();
-            int pageEnd = total / sizePage;
-            if (total % sizePage != 0) {
-                pageEnd++;
-            }
-            carDAO.loadCar(indexPage, sizePage);
-            List<TblCarDTO> listCar = carDAO.getListCar();
-//            Load Cate
-            TblCategoryDAO cateDAO = new TblCategoryDAO();
-            cateDAO.getCategory();
-            List<TblCategoryDTO> list = cateDAO.getList();
-            session.setAttribute("CATECAR", list);
-            session.setAttribute("LISTCAR", listCar);
-            session.setAttribute("CARPAGEEND", pageEnd);
-        } catch (SQLException | NamingException ex) {
-            Logger.getLogger(CarLoadServlet.class.getName()).log(Level.SEVERE, null, ex);
+            
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
             out.close();
         }
     }

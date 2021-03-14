@@ -21,8 +21,8 @@ import com.restfb.types.User;
  */
 public class RestFB implements Serializable {
 
-    public static String getToken(final String code) throws ClientProtocolException, IOException {
-        String link = String.format(Constants.FACEBOOK_LINK_GET_TOKEN, Constants.FACEBOOK_APP_ID, Constants.FACEBOOK_APP_SECRET, Constants.FACEBOOK_REDIRECT_URL, code);
+    public static String getToken(final String code, String uri) throws ClientProtocolException, IOException {
+        String link = String.format(Constants.FACEBOOK_LINK_GET_TOKEN, Constants.FACEBOOK_APP_ID, Constants.FACEBOOK_APP_SECRET, uri, code);
         String response = Request.Get(link).execute().returnContent().asString();
         JsonObject jobj = new Gson().fromJson(response, JsonObject.class);
         String accessToken = jobj.get("access_token").toString().replaceAll("\"", "");

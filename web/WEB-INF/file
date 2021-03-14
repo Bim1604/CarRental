@@ -5,3 +5,4 @@ login=login.jsp
 Log=LogoutServlet
 Create=CreateAccountServlet
 create=createAccount.jsp
+Search=SearchServlet

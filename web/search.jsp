@@ -20,10 +20,7 @@
             <ul>
                 <li>
                     Car Rent
-                </li>
-                <li>
-                    <a href="" >Find Car</a>                    
-                </li>
+                </li>                
                 <li>
                     <a href="facebook.com"><i class="fa fa-facebook-square" aria-hidden="true">FaceBook</i></a> 
                 </li>
@@ -57,30 +54,43 @@
                 </c:if>                 
             </ul>
         </div>
+        <div class="searchBody">
+            <form action="Search">
+                <ul>
+                    <li>
+                        <input type="text" name="txtSearchValue" value="" placeholder="search car name" />
+                        <input type="submit" value="Search" />
+                    </li>
+                    <li>
+                        <select name="txtCate">
+                            <c:forEach var="cate" items="${sessionScope.CATECAR}">
+                                <option label="${cate.categoryName}" value="${cate.categoryID}" />
+                            </c:forEach>
+                        </select>
+                    </li>
+                </ul>
+            </form>
+        </div>
         <!-- Load Car Data -->
         <c:set var="result" value="${sessionScope.LISTCAR}" />
-
         <c:if test="${not empty result}">
             <div class="searchBody">
                 <table border="1">
                     <thead>
                         <tr>
-                            <th>No.</th>
                             <th>Car Name</th>
                             <th>Color</th>
                             <th>Year</th>
                             <th>Category</th>
                             <th>Price</th>
                             <th>Quantity</th>
+                            <th>Image</th>
                         </tr>
                     </thead>
                     <tbody>
                     <form action="">
-                        <c:forEach var="dto" items="${result}" varStatus="counter">
+                        <c:forEach var="dto" items="${result}">
                             <tr>
-                                <td>
-                                    ${counter.count}
-                                </td>
                                 <td>
                                     ${dto.carName}
                                 </td>
@@ -98,6 +108,10 @@
                                 </td>
                                 <td>
                                     ${dto.quantity}
+                                </td>
+                                <td>                                  
+                                    <img src="image/mer.jfif">
+                                    <img src="image/mer.jfif" alt="">
                                 </td>
                             </tr>
                         </c:forEach>

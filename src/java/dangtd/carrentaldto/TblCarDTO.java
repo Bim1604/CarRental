@@ -19,11 +19,12 @@ public class TblCarDTO implements Serializable{
     private String category;
     private float price;
     private int quantity;
+    private String img;
 
     public TblCarDTO() {
     }
 
-    public TblCarDTO(String carID, String carName, String color, String year, String category, float price, int quantity) {
+    public TblCarDTO(String carID, String carName, String color, String year, String category, float price, int quantity, String img) {
         this.carID = carID;
         this.carName = carName;
         this.color = color;
@@ -31,6 +32,7 @@ public class TblCarDTO implements Serializable{
         this.category = category;
         this.price = price;
         this.quantity = quantity;
+        this.img = img;
     }
 
     /**
@@ -130,6 +132,21 @@ public class TblCarDTO implements Serializable{
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     
     
 }

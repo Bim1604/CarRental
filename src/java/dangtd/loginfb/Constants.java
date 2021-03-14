@@ -13,8 +13,7 @@ import java.io.Serializable;
  */
 public class Constants implements Serializable{
 
-    public static String FACEBOOK_APP_ID = "897988791001126";
-    public static String FACEBOOK_APP_SECRET = "a1b0fefc125d19583bc81a1df653a474";
-    public static String FACEBOOK_REDIRECT_URL = "https://localhost:8084/CarRental/loginFB";
+    public static String FACEBOOK_APP_ID = "133206675390895";
+    public static String FACEBOOK_APP_SECRET = "303babc548b1074c7e3d6906721b09eb";
     public static String FACEBOOK_LINK_GET_TOKEN = "https://graph.facebook.com/oauth/access_token?client_id=%s&client_secret=%s&redirect_uri=%s&code=%s";
 }

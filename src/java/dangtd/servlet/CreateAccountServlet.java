@@ -5,7 +5,9 @@
  */
 package dangtd.servlet;
 
+import com.restfb.types.User;
 import dangtd.carrentaldao.TblUserDAO;
+import dangtd.loginfb.RestFB;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -47,32 +49,53 @@ public class CreateAccountServlet extends HttpServlet {
         String phone = request.getParameter("txtPhone");
         String name = request.getParameter("txtName");
         String address = request.getParameter("txtAddress");
+        String codeFB = request.getParameter("code");
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
         String url = map.get(loginPage);;
         try {
-            if (!email.isEmpty() && !password.isEmpty() && !phone.isEmpty() && !name.isEmpty() && !address.isEmpty()) {
-                TblUserDAO userDAO = new TblUserDAO();
-                boolean checkExist = userDAO.checkExistAccount(email);
-                if (!checkExist) {
-                    boolean rs = userDAO.createNewAccount(email, password, phone, name, address);
-                    if (rs == true) {
-                        String msg = "Create Successful";
-                        request.setAttribute("CreateSuccess", msg);
+            if (codeFB == null || codeFB.isEmpty()) {
+                if (!email.isEmpty() && !password.isEmpty() && !phone.isEmpty() && !name.isEmpty() && !address.isEmpty()) {
+                    TblUserDAO userDAO = new TblUserDAO();
+                    boolean checkExist = userDAO.checkExistAccount(email);
+                    if (!checkExist) {
+                        boolean rs = userDAO.createNewAccount(email, password, phone, name, address);
+                        if (rs == true) {
+                            String msg = "Create Successful";
+                            request.setAttribute("CreateSuccess", msg);
+                        } else {
+                            url = map.get(createPage);
+                            String msg = "Create Failded";
+                            request.setAttribute("CreateFaild", msg);
+                        }
                     } else {
                         url = map.get(createPage);
-                        String msg = "Create Failded";
+                        String msg = "Existed Email !!";
                         request.setAttribute("CreateFaild", msg);
                     }
                 } else {
                     url = map.get(createPage);
-                    String msg = "Existed Email !!";
+                    String msg = "Please fill all information !!";
                     request.setAttribute("CreateFaild", msg);
                 }
             } else {
-                url = map.get(createPage);
-                String msg = "Please fill all information !!";
-                request.setAttribute("CreateFaild", msg);
+                String accessToken = RestFB.getToken(codeFB, "http://localhost:8084/CarRental/Create");
+                    User user = RestFB.getUserInfo(accessToken);
+                    String username = user.getId();
+                    String fullname = user.getName();
+                    TblUserDAO dao = new TblUserDAO();
+                    try {
+                        boolean rs = dao.createNewAccount(username, "","",fullname,"");
+                        if (rs){
+                            String msg = "Create Successful";
+                            request.setAttribute("CreateSuccess", msg);
+                        }
+                    } catch (SQLException ex) {
+                        if (ex.getMessage().contains("duplicate")) {
+                            request.setAttribute("MSG", "This Facebook is ");
+                        }
+//                        LOGGER.error("CreateRecordServlet_SQLException: " + ex.getMessage());
+                    }
             }
 
         } catch (SQLException | NamingException ex) {

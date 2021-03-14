@@ -5,7 +5,9 @@
  */
 package dangtd.servlet;
 
+import com.restfb.types.User;
 import dangtd.carrentaldao.TblUserDAO;
+import dangtd.loginfb.RestFB;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -46,31 +48,50 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String username = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
+        String code = request.getParameter("code");
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
         HttpSession session = request.getSession(true);
         String url = map.get(loginPage);
         try {
-            if (username.isEmpty() || password.isEmpty()) {
-                String msg = "Please fill all information !!";
-                request.setAttribute("LOGINFAILED", msg);
-            } else {
-                TblUserDAO dao = new TblUserDAO();
-                String name = dao.checkLogin(username, password);
-                if (name != null) {
-                    boolean statusAccount = dao.checkStatusAccount(username);
-                    if (statusAccount) {
-                        session.setAttribute("NAME", name);
-                        url = map.get(carPage);
-                    } else {
-                        session.setAttribute("NAME", name);
-                        url = map.get(activePage);
-                    }
-                } else {
-                    String msg = "Invalid password or username !!";
+            TblUserDAO dao = new TblUserDAO();
+            if (code == null || code.isEmpty()) {
+                if (username.isEmpty() || password.isEmpty()) {
+                    String msg = "Please fill all information !!";
                     request.setAttribute("LOGINFAILED", msg);
+                } else {
+                    
+                    String name = dao.checkLogin(username, password);
+                    if (name != null) {
+                        boolean statusAccount = dao.checkStatusAccount(username);
+                        if (statusAccount) {
+                            session.setAttribute("NAME", name);
+                            url = map.get(carPage);
+                        } else {
+                            session.setAttribute("NAME", name);
+                            url = map.get(activePage);
+                        }
+                    } else {
+                        String msg = "Invalid password or username !!";
+                        request.setAttribute("LOGINFAILED", msg);
+                    }
+                }
+            } else {
+                String accessToken = RestFB.getToken(code, "http://localhost:8084/CarRental/Login");
+                User user = RestFB.getUserInfo(accessToken);
+                username = user.getId();
+                String fullname = user.getName();
+                String result = dao.checkLogin(username);
+                if (result != null) {
+                    session.setAttribute("NAME", fullname);
+                    boolean role = dao.getRole(username);
+                    url = map.get(carPage);
+                    session.setAttribute("ROLE", role);
+                } else {
+                    session.setAttribute("MSG", "Login facebook fail. Please try again.");
                 }
             }
+
         } catch (SQLException | NamingException ex) {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
