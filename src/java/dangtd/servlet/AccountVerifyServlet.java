@@ -5,11 +5,8 @@
  */
 package dangtd.servlet;
 
-import com.restfb.types.User;
 import dangtd.carrentaldao.TblUserDAO;
 import dangtd.carrentaldto.TblUserDTO;
-import dangtd.loginfb.RestFB;
-import dangtd.verify.GmailSend;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -29,12 +26,9 @@ import javax.servlet.http.HttpSession;
  *
  * @author Admin
  */
-public class LoginServlet extends HttpServlet {
-
-    private final String loginPage = "login";
-    private final String carPage = "";
-    private final String activePage = "verify";
-
+public class AccountVerifyServlet extends HttpServlet {
+    private final String createPage = "create";
+    private final String searchPage = "search";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -48,57 +42,28 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String username = request.getParameter("txtUsername");
-        String password = request.getParameter("txtPassword");
-        String code = request.getParameter("code");
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
-        HttpSession session = request.getSession(true);
-        String url = map.get(loginPage);
+        String url = map.get(createPage);
+        String code = request.getParameter("txtCode");
+        HttpSession session = request.getSession();
         try {
-            TblUserDAO dao = new TblUserDAO();
-            if (code == null || code.isEmpty()) {
-                if (username.isEmpty() || password.isEmpty()) {
-                    String msg = "Please fill all information !!";
-                    request.setAttribute("LOGINFAILED", msg);
+            TblUserDTO dto = (TblUserDTO) session.getAttribute("VERIFYACCOUNT");
+            if (code.equals(dto.getCode())){
+                TblUserDAO userDAO = new TblUserDAO();
+                boolean rs = userDAO.updateStatus(dto.getEmail());
+                if (rs){
+                    session.setAttribute("NAME", dto.getName());
+                    url = map.get(searchPage);
                 } else {
-                    String name = dao.checkLogin(username, password);
-                    if (name != null) {
-                        boolean statusAccount = dao.checkStatusAccount(username);
-                        if (statusAccount) {
-                            session.setAttribute("NAME", name);
-                            url = map.get(carPage);
-                        } else {
-                            session.setAttribute("NAME", name);
-                            GmailSend mail = new GmailSend();
-                            String codeVerify = mail.sendEmail(username);
-                            TblUserDTO dto = new TblUserDTO(username, password, "", name, "", codeVerify);
-                            session.setAttribute("VERIFYACCOUNT", dto);
-                            url = map.get(activePage);
-                        }
-                    } else {
-                        String msg = "Invalid password or username !!";
-                        request.setAttribute("LOGINFAILED", msg);
-                    }
-                }
-            } else {
-                String accessToken = RestFB.getToken(code, "http://localhost:8084/CarRental/Login");
-                User user = RestFB.getUserInfo(accessToken);
-                username = user.getId();
-                String fullname = user.getName();
-                String result = dao.checkLogin(username);
-                if (result != null) {
-                    session.setAttribute("NAME", fullname);
-                    boolean role = dao.getRole(username);
-                    url = map.get(carPage);
-                    session.setAttribute("ROLE", role);
-                } else {
-                    session.setAttribute("MSG", "Login facebook fail. Please try again.");
+                    String msg = "Code is not valid";
+                    request.setAttribute("VERIFYFAILED", msg);
                 }
             }
-
-        } catch (SQLException | NamingException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountVerifyServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(AccountVerifyServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

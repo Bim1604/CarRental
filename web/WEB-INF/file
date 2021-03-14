@@ -6,3 +6,5 @@ Log=LogoutServlet
 Create=CreateAccountServlet
 create=createAccount.jsp
 Search=SearchServlet
+verify=verifyPage.jsp
+Verify=AccountVerifyServlet

@@ -112,9 +112,14 @@ public class FilterDispatcher implements Filter {
             int lastIndex = uri.lastIndexOf("/");
             String resource = uri.substring(lastIndex + 1);
             url = map.get(resource);
+            System.out.println("url: " + url);
+            System.out.println("resource: " + resource);
+            System.out.println("map: " + map);
             if (url != null) {
                 RequestDispatcher rq = req.getRequestDispatcher(url);
                 rq.forward(request, response);
+            } else {
+                chain.doFilter(request, response);
             }
         } catch (Throwable e) {
             BasicConfigurator.configure();

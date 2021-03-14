@@ -163,9 +163,7 @@ public class TblUserDAO implements Serializable {
             ps.setString(5, address);
             ps.setBoolean(6, false);
             ps.setBoolean(7, false);
-            System.out.println("ok");
             int row = ps.executeUpdate();
-            System.out.println("thanh cong");
             if (row > 0) {
                 return true;
             }
@@ -207,6 +205,33 @@ public class TblUserDAO implements Serializable {
                 ps.close();
             }
             if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    }
+//    Cập nhật trạng thái người dùng
+    public boolean updateStatus(String email) throws SQLException, NamingException{
+        Connection con = null;
+        PreparedStatement ps = null;
+        
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "Update tblUser "
+                    + "Set statusID = ? "
+                    + "Where email = ?";
+            ps = con.prepareStatement(sql);
+            ps.setBoolean(1, true);
+            ps.setString(2, email);
+            int row = ps.executeUpdate();
+            if (row > 0 ){
+                return true;
+            }
+        } finally {
+            if (ps != null){
+                ps.close();
+            }
+            if (con != null){
                 con.close();
             }
         }

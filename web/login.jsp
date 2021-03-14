@@ -11,9 +11,6 @@
     </head>
 
     <body         
-        <c:if test="${not empty requestScope.CreateSuccess}">
-            onload="alertCreateSuccessfulMessage()"
-        </c:if>
         <c:if test="${not empty requestScope.LOGINFAILED}">
             onload="alertLoginFailedMessage()"
         </c:if>
@@ -46,9 +43,6 @@
             </div>
         </form>
         <script>
-            function alertCreateSuccessfulMessage() {
-                alert("${requestScope.CreateSuccess}");
-            }
             function alertLoginFailedMessage() {
                 alert("${requestScope.LOGINFAILED}");
             }

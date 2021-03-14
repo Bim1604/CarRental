@@ -22,6 +22,9 @@
                     <input type="password" value="" name="txtPassword" placeholder="Password">
                 </div>
                 <div>
+                    <input type="password" value="" name="txtConfirm" placeholder="Confirm Password">
+                </div>
+                <div>
                     <input type="text" value="" name="txtPhone" placeholder="Phone">
                 </div>
                 <div>
