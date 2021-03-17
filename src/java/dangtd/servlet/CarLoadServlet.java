@@ -31,7 +31,7 @@ import javax.servlet.http.HttpSession;
  */
 public class CarLoadServlet extends HttpServlet {
 
-    private final String cateServlet = "search";
+    private final String displayPage = "display";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,11 +50,11 @@ public class CarLoadServlet extends HttpServlet {
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
         HttpSession session = request.getSession(true);
         int indexPage = 1;
-        String url = map.get(cateServlet);
+        String url = map.get(displayPage);
         if (request.getParameter("txtPageIndex") != null) {
             indexPage = Integer.parseInt(request.getParameter("txtPageIndex"));
         }
-        int sizePage = 1;
+        int sizePage = 2;
         try {
 //            load car
             TblCarDAO carDAO = new TblCarDAO();

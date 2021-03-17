@@ -1,34 +1,34 @@
-<%-- Document : search Created on : Mar 7, 2021, 11:25:20 PM Author : Admin --%>
+<%-- 
+    Document   : display
+    Created on : Mar 16, 2021, 4:55:43 PM
+    Author     : Admin
+--%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
-
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="CSS/C.css">
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-        <title>Car Rental</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+        <title>Car display</title>
     </head>
-
     <body>
         <!-- header -->
         <div class="header">
             <ul>
                 <li>
                     Car Rent
+                </li>                
+                <li>
+                    <a href="facebook.com"><i class="fa fa-facebook-square" aria-hidden="true">FaceBook</i></a> 
                 </li>
                 <li>
-                    <a href="facebook.com"><i class="fa fa-facebook-square" aria-hidden="true">FaceBook</i></a>
+                    <i class="fa fa-phone" aria-hidden="true"> 0852573133</i> 
                 </li>
                 <li>
-                    <i class="fa fa-phone" aria-hidden="true"> 0852573133</i>
-                </li>
-                <li>
-                    <a href="gmail.com"><i class="fa fa-envelope" aria-hidden="true">
-                            dangvipro3@gmail.com</i></a>
+                    <a href="gmail.com"><i class="fa fa-envelope" aria-hidden="true"> dangvipro3@gmail.com</i></a>
                 </li>
             </ul>
             <ul>
@@ -41,7 +41,7 @@
                     <li>
                         <form action="Log">
                             <input type="submit" value="Logout" />
-                        </form>
+                        </form>                        
                     </li>
 
                 </c:if>
@@ -49,34 +49,32 @@
                     <li>
                         <form action="login">
                             <input type="submit" value="Login" />
-                        </form>
+                        </form>  
                     </li>
-                </c:if>
+                </c:if>                 
             </ul>
         </div>
         <div class="searchBody">
             <form action="Search">
                 <ul>
                     <li>
-                        <input type="text" name="txtSearchValue" value="${param.txtSearchValue}" placeholder="search car name" />
+                        <input type="text" name="txtSearchValue" value="" placeholder="search car name" />
                         <input type="submit" value="Search" />
                     </li>
                     <li>
                         <select name="txtCate">
-                            <option label="All" value="" />
                             <c:forEach var="cate" items="${sessionScope.CATECAR}">
-                                <option label="${cate.categoryName}" value="${cate.categoryID}" <c:if test="${cate.categoryID eq param.txtCate}">
-                                        selected="selected"
-                                </c:if> />
+                                <option label="${cate.categoryName}" value="${cate.categoryID}" />
                             </c:forEach>
                         </select>
                     </li>
                 </ul>
             </form>
         </div>
-        <!-- Load Data Search -->
-        <div class="searchBody">
-            <c:if test="${not empty requestScope.LISTCARSEARCH}">
+        <!-- Load Car Data -->
+        <c:set var="result" value="${sessionScope.LISTCAR}" />
+        <c:if test="${not empty result}">
+            <div class="searchBody">
                 <table border="1">
                     <thead>
                         <tr>
@@ -90,7 +88,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="dto" items="${requestScope.LISTCARSEARCH}">
+                    <form action="">
+                        <c:forEach var="dto" items="${result}">
                             <tr>
                                 <td>
                                     ${dto.carName}
@@ -110,21 +109,23 @@
                                 <td>
                                     ${dto.quantity}
                                 </td>
-                                <td>
+                                <td>                              
+
                                     <img src="image/${dto.img}">
                                 </td>
                             </tr>
                         </c:forEach>
+                    </form>                                 
                     </tbody>
-                </table>
-            </c:if>
-        </div>
-        <div>
-            <c:forEach begin="1" end="${requestScope.ENDPAGE}" var="indexPage">
-                <div>
-                    <a href="Search?txtSearchValue=${param.txtSearchValue}&txtCate=${param.txtCate}&txtPageIndex=${indexPage}">${indexPage}</a>
-                </div>
-            </c:forEach>
-        </div>
+                </table>    
+            </div>  
+            <div>
+                <c:forEach begin="1" end="${sessionScope.CARPAGEEND}" var="indexPage">
+                    <div>
+                        <a href="CarLoadServlet?txtPageIndex=${indexPage}">${indexPage}</a>
+                    </div>
+                </c:forEach>
+            </div>       
+        </c:if>        
     </body>
 </html>

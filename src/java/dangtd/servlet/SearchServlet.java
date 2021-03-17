@@ -5,8 +5,18 @@
  */
 package dangtd.servlet;
 
+import dangtd.carrentaldao.TblCarDAO;
+import dangtd.carrentaldto.TblCarDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Admin
  */
 public class SearchServlet extends HttpServlet {
-
+    private final String searchPage = "search";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -33,9 +43,32 @@ public class SearchServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String searchValue = request.getParameter("txtSearchValue");
         String categoryID = request.getParameter("txtCate");
+        int indexPage = 1;
+        if (request.getParameter("txtPageIndex") != null){
+            indexPage = Integer.parseInt(request.getParameter("txtPageIndex"));
+        }
+        int pageSize = 2;
+        ServletContext context = request.getServletContext();
+        Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
+        String url = map.get(searchPage);
         try {
-            
+            TblCarDAO carDAO = new TblCarDAO();
+            int totalCar = carDAO.countSearchCar(searchValue, categoryID);
+            int pageEnd = totalCar/pageSize;
+            if (totalCar % pageSize != 0){
+                pageEnd++;
+            }
+            carDAO.seachCar(indexPage, pageSize, searchValue, categoryID);
+            List<TblCarDTO> list = carDAO.getListCar();
+            request.setAttribute("ENDPAGE", pageEnd);
+            request.setAttribute("LISTCARSEARCH", list);
+        } catch (SQLException ex) {
+            Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
             out.close();
         }
     }

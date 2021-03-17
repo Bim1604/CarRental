@@ -24,6 +24,11 @@ public class TblCarDTO implements Serializable{
     public TblCarDTO() {
     }
 
+    @Override
+    public String toString() {
+        return "TblCarDTO{" + "carID=" + carID + ", carName=" + carName + ", color=" + color + ", year=" + year + ", category=" + category + ", price=" + price + ", quantity=" + quantity + ", img=" + img + '}';
+    }
+    
     public TblCarDTO(String carID, String carName, String color, String year, String category, float price, int quantity, String img) {
         this.carID = carID;
         this.carName = carName;

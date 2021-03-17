@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSession;
  */
 public class AccountVerifyServlet extends HttpServlet {
     private final String createPage = "create";
-    private final String searchPage = "search";
+    private final String displayPage = "display";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -54,7 +54,7 @@ public class AccountVerifyServlet extends HttpServlet {
                 boolean rs = userDAO.updateStatus(dto.getEmail());
                 if (rs){
                     session.setAttribute("NAME", dto.getName());
-                    url = map.get(searchPage);
+                    url = map.get(displayPage);
                 } else {
                     String msg = "Code is not valid";
                     request.setAttribute("VERIFYFAILED", msg);

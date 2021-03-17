@@ -1,5 +1,6 @@
  =CarLoadServlet
 Login=LoginServlet
+display=display.jsp
 search=search.jsp
 login=login.jsp
 Log=LogoutServlet
