@@ -5,11 +5,10 @@
  */
 package dangtd.servlet;
 
-import com.restfb.types.User;
-import dangtd.carrentaldao.TblUserDAO;
-import dangtd.carrentaldto.TblUserDTO;
-import dangtd.loginfb.RestFB;
-import dangtd.verify.GmailSend;
+import dangtd.carrentaldao.TblCarDAO;
+import dangtd.carrentaldao.TblDetailsRentDAO;
+import dangtd.carrentaldao.TblGuestDAO;
+import dangtd.carrentaldao.TblRentalDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -29,12 +28,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Admin
  */
-public class LoginServlet extends HttpServlet {
-
-    private final String loginPage = "login";
-    private final String carPage = "";
-    private final String activePage = "verify";
-
+public class CartInfoServlet extends HttpServlet {
+    private final String displayPage = "";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -48,60 +43,50 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String username = request.getParameter("txtUsername");
-        String password = request.getParameter("txtPassword");
-        String code = request.getParameter("code");
+        String[] carID = request.getParameterValues("txtCarID");
+        String[] txtAmount = request.getParameterValues("txtAmount");
+        Integer[] amount = new Integer[txtAmount.length];
+        String[] txtTotal = request.getParameterValues("txtTotal");
+        Float[] total = new Float[txtTotal.length];
+        String guestName = request.getParameter("txtGuestName");
+        String phone = request.getParameter("txtGuestPhone");
+        String address = request.getParameter("txtGuestAddress");
+        String rentalDate = request.getParameter("txtRentalDate");
+        String returnDate = request.getParameter("txtReturnDate");
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("EMAIL");
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
-        HttpSession session = request.getSession(true);
-        String url = map.get(loginPage);
+        String url = map.get(displayPage);
         try {
-            TblUserDAO dao = new TblUserDAO();
-            if (code == null || code.isEmpty()) {
-                if (username.isEmpty() || password.isEmpty()) {
-                    String msg = "Please fill all information !!";
-                    request.setAttribute("LOGINFAILED", msg);
-                } else {
-                    String name = dao.checkLogin(username, password);
-                    if (name != null) {
-                        boolean statusAccount = dao.checkStatusAccount(username);
-                        if (statusAccount) {
-                            session.setAttribute("NAME", name);
-                            session.setAttribute("EMAIL", username);
-                            url = map.get(carPage);
-                        } else {
-                            session.setAttribute("NAME", name);
-                            session.setAttribute("EMAIL", username);
-                            GmailSend mail = new GmailSend();
-                            String codeVerify = mail.sendEmail(username);
-                            TblUserDTO dto = new TblUserDTO(username, password, "", name, "", codeVerify);
-                            session.setAttribute("VERIFYACCOUNT", dto);
-                            url = map.get(activePage);
+//            Thông tin khách hàng
+            TblGuestDAO guestDAO = new TblGuestDAO();
+            int guestID = guestDAO.getGuestID();
+            boolean rsGuest = guestDAO.addGuestInfo(guestID, guestName, phone, address);
+            if (rsGuest) {
+//            bill thuê xe
+                TblRentalDAO rentalDAO = new TblRentalDAO();
+                int billID = rentalDAO.getBillID();
+                boolean rsRental = rentalDAO.addRentalBill(billID, guestID, rentalDate, returnDate, guestID, email);
+                if (rsRental) {
+                    for (int i = 0; i < carID.length; i++) {
+                        amount[i] = Integer.parseInt(txtAmount[i]);
+                        total[i] = Float.parseFloat(txtTotal[i]);
+                        TblDetailsRentDAO detailsDAO = new TblDetailsRentDAO();
+                        TblCarDAO carDAO = new TblCarDAO();
+                        float price = carDAO.getPriceCar(carID[i]);
+                        boolean rsDetails = detailsDAO.addDetailsRent(billID, carID[i], amount[i], price , total[i]);
+                        if (rsDetails){
+                            String msg = "Rent Car Sucessfully";
+                            request.setAttribute("CHECKOUTSUCCESS", msg);
                         }
-                    } else {
-                        String msg = "Invalid password or username !!";
-                        request.setAttribute("LOGINFAILED", msg);
                     }
                 }
-            } else {
-                String accessToken = RestFB.getToken(code, "http://localhost:8084/CarRental/Login");
-                User user = RestFB.getUserInfo(accessToken);
-                username = user.getId();
-                String fullname = user.getName();
-                String result = dao.checkLogin(username);
-                if (result != null) {
-                    session.setAttribute("NAME", fullname);
-                    session.setAttribute("EMAIL", username);
-                    boolean role = dao.getRole(username);
-                    url = map.get(carPage);
-                    session.setAttribute("ROLE", role);
-                } else {
-                    session.setAttribute("MSG", "Login facebook fail. Please try again.");
-                }
             }
-
-        } catch (SQLException | NamingException ex) {
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CartInfoServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(CartInfoServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

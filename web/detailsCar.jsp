@@ -1,6 +1,6 @@
 <%-- 
-    Document   : display
-    Created on : Mar 16, 2021, 4:55:43 PM
+    Document   : detailsCar
+    Created on : Mar 17, 2021, 7:03:50 PM
     Author     : Admin
 --%>
 
@@ -12,11 +12,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="CSS/C.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-        <title>Car display</title>
+        <title>Details Car</title>
     </head>
-    <body <c:if test="${not empty requestScope.CHECKOUTSUCCESS}">
-            onload="getCheckOutMsg()"
-        </c:if>>
+    <body>
         <!-- header -->
         <div class="header">
             <ul>
@@ -74,46 +72,49 @@
                 </ul>
             </form>
         </div>
-        <!-- Load Car Data -->
-        <c:set var="result" value="${sessionScope.LISTCAR}" />
-        <c:if test="${not empty result}">
-            <div class="searchBody">
-                <table border="1">
+        <!--Load details car-->
+        <div>
+            <table border="1">
+                <c:forEach var="dto" items="${requestScope.DETAILSCAR}">
                     <tbody>
                     <form action="Add">
-                        <c:forEach var="dto" items="${result}">
-                            <tr>
-                                <td>  
-                                    <c:url var="urlRewriting" value="DetailsCarServlet">
-                                        <c:param name="pk" value="${dto.carID}" />
-                                    </c:url>
-                                    <a href="${urlRewriting}"><img src="image/${dto.img}"></a>  
-                                    <div>
-                                        ${dto.carName}(${dto.year}): ${dto.price}$
-                                    </div>
-                                    <div>
-                                        <input type="hidden" name="pk" value="${dto.carID}" />
-                                        <input type="submit" value="Rent" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </form>                                 
+                        <tr>
+                            <td>
+                                <img src="image/${dto.img}" /> 
+                            </td>
+                            <td>
+                                <div>
+                                    Car Name: ${dto.carName}
+                                </div>
+                                <div>
+                                    Car Color: ${dto.color}
+                                </div>
+                                <div>
+                                    Car year: ${dto.year}
+                                </div>
+                                <div>
+                                    Car category: ${dto.category}
+                                </div>
+                                <div>
+                                    Price: ${dto.price}$
+                                </div>
+                                <div>
+                                    Quantity: ${dto.quantity}
+                                </div>                        
+                                <div>
+                                    <input type="hidden" name="pk" value="${dto.carID}" />
+                                    <input type="submit" value="Rent" />
+                                    <a href="CartServlet">View Cart</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </form>
                     </tbody>
-                </table>    
-            </div>  
-            <div>
-                <c:forEach begin="1" end="${sessionScope.CARPAGEEND}" var="indexPage">
-                    <div>
-                        <a href="CarLoadServlet?txtPageIndex=${indexPage}">${indexPage}</a>
-                    </div>
                 </c:forEach>
-            </div>       
-        </c:if>  
-        <script>
-            function getCheckOutMsg() {
-                alert("${requestScope.CHECKOUTSUCCESS}");
-            }
-        </script>
+            </table>
+        </div>
+        <div>
+            <a href="CarLoadServlet">Return Car Display</a>
+        </div>
     </body>
 </html>

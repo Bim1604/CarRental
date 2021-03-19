@@ -189,4 +189,79 @@ public class TblCarDAO implements Serializable {
             }
         }
     }
+    
+//    chi tiết xe
+    public void loadDetailsCar(String carID) throws SQLException, NamingException{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "Select carID,carName, color, year, categoryID, price, quantity, image "
+                    + "From tblCar "
+                    + "Where carID = ?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, carID);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                String carName = rs.getString(2);
+                String color = rs.getString(3);
+                String year = rs.getString(4);
+                String categoryID = rs.getString(5);               
+                TblCategoryDAO cateDAO = new TblCategoryDAO();
+                String categoryName = cateDAO.getCategoryName(categoryID);
+                float price = rs.getFloat(6);
+                int quantity = rs.getInt(7);
+                String img = rs.getString(8);
+                TblCarDTO dto = new TblCarDTO(carID, carName, color, year, categoryName, price, quantity, img);
+                System.out.println("dto: " + dto);
+                if (this.listCar == null) {
+                    this.listCar = new ArrayList<>();
+                }
+                this.listCar.add(dto);
+            }
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (ps != null){
+                ps.close();
+            }
+            if (con != null){
+                con.close();
+            }
+        }
+    }
+//    Lấy giá của ô tô
+    public float getPriceCar(String carID) throws SQLException, NamingException{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "Select price "
+                    + "From tblCar "
+                    + "Where carID = ?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, carID);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                return rs.getFloat(1);
+            }
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (ps != null){
+                ps.close();
+            }
+            if (con != null){
+                con.close();
+            }
+        }
+        return 0;
+    }
+    
 }

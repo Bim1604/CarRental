@@ -18,7 +18,7 @@
         <div class="header">
             <ul>
                 <li>
-                    Car Rent
+                    <a href="CarLoadServlet">Car Rent</a> 
                 </li>
                 <li>
                     <a href="facebook.com"><i class="fa fa-facebook-square" aria-hidden="true">FaceBook</i></a>
@@ -67,7 +67,7 @@
                             <c:forEach var="cate" items="${sessionScope.CATECAR}">
                                 <option label="${cate.categoryName}" value="${cate.categoryID}" <c:if test="${cate.categoryID eq param.txtCate}">
                                         selected="selected"
-                                </c:if> />
+                                    </c:if> />
                             </c:forEach>
                         </select>
                     </li>
@@ -78,43 +78,26 @@
         <div class="searchBody">
             <c:if test="${not empty requestScope.LISTCARSEARCH}">
                 <table border="1">
-                    <thead>
-                        <tr>
-                            <th>Car Name</th>
-                            <th>Color</th>
-                            <th>Year</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Image</th>
-                        </tr>
-                    </thead>
                     <tbody>
+                    <form action="Add">
                         <c:forEach var="dto" items="${requestScope.LISTCARSEARCH}">
                             <tr>
-                                <td>
-                                    ${dto.carName}
-                                </td>
-                                <td>
-                                    ${dto.color}
-                                </td>
-                                <td>
-                                    ${dto.year}
-                                </td>
-                                <td>
-                                    ${dto.category}
-                                </td>
-                                <td>
-                                    ${dto.price}
-                                </td>
-                                <td>
-                                    ${dto.quantity}
-                                </td>
-                                <td>
-                                    <img src="image/${dto.img}">
+                                <td>  
+                                    <c:url var="urlRewriting" value="DetailsCarServlet">
+                                        <c:param name="pk" value="${dto.carID}" />
+                                    </c:url>
+                                    <a href="${urlRewriting}"><img src="image/${dto.img}"></a>  
+                                    <div>
+                                        ${dto.carName}(${dto.year}): ${dto.price}$
+                                    </div>
+                                    <div>
+                                        <input type="hidden" name="pk" value="${dto.carID}" />
+                                        <input type="submit" value="Rent" />
+                                    </div>
                                 </td>
                             </tr>
                         </c:forEach>
+                    </form>
                     </tbody>
                 </table>
             </c:if>

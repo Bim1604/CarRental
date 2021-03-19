@@ -3,8 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/FPT/CarRental/web/search.jsp</file>
-            <file>file:/D:/FPT/CarRental/src/java/dangtd/servlet/SearchServlet.java</file>
+            <file>file:/D:/FPT/CarRental/web/viewCart.jsp</file>
+            <file>file:/D:/FPT/CarRental/web/WEB-INF/file</file>
+            <file>file:/D:/FPT/CarRental/src/java/dangtd/servlet/LoginServlet.java</file>
+            <file>file:/D:/FPT/CarRental/src/java/dangtd/carrentaldao/TblRentalDAO.java</file>
+            <file>file:/D:/FPT/CarRental/src/java/dangtd/servlet/CartInfoServlet.java</file>
+            <file>file:/D:/FPT/CarRental/src/java/dangtd/carrentaldto/TblRentalDTO.java</file>
         </group>
     </open-files>
 </project-private>
