@@ -160,7 +160,7 @@
     margin-left: 460px;
     border: 1px solid black;
     width: 430px;
-    height: 190px;
+    height: 290px;
     padding-left: 10px;
     margin-top: 160px;
     margin-bottom: 180px;
@@ -354,4 +354,29 @@
 #discount{
     position: relative;
     left: 30px;
+}
+#Confirm{
+    position: relative;
+    left: 246px;
+    border-radius: 6px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+#Confirm:hover{
+    background-color: #f3cbcb;
+}
+#GuestTable input:hover{
+    background-color: #ffabab;
+}
+.backViewLink a{
+    text-decoration: none;
+    margin-left: 200px;
+    color: blue;
+}
+.backViewLink a:hover{
+    background-color: #00fff5;
+}
+.backViewLink{
+    margin-top: 60px;
+    margin-bottom: 230px;
 }

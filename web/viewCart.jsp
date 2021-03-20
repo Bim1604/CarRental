@@ -175,7 +175,8 @@
                                     </tbody>
                                 </table>
                                 <div>
-                                    <input id="Confirm" type="submit" value="Confirm"/>
+                                    <!-- <input id="Confirm" type="submit" value="Confirm"/> -->
+                                    <button id="Confirm" type="submit">Confirm</button>
                                 </div>
                             </div>
                         </c:if>
@@ -190,8 +191,14 @@
                 </font>
             </c:forEach>
         </c:if>
-        <div>
+        <div class="backViewLink">
             <a href="CarLoadServlet">Return Car Display</a>
+        </div>
+        <div class="footer">
+
+        </div>
+        <div class="sfooter">
+
         </div>
         <script>
             function checkNumberOfCar() {

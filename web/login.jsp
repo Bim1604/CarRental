@@ -8,6 +8,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="CSS/C.css">
         <title>Login</title>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
 
     <body <c:if test="${not empty requestScope.LOGINFAILED}">
@@ -32,7 +33,15 @@
                     <input class="username" type="text" name="txtUsername" value="" placeholder="Username" />
                     <input type="password" name="txtPassword" value="" placeholder="Password" />
                     <button type="submit">Login</button>
-                </div>
+                    <div class="g-recaptcha"
+                         data-sitekey="6LdGAocaAAAAAEcdjJY9VLbROibrU-jkoVXwbPaN">                         
+                    </div>
+                    <c:if test="${not empty requestScope.CAPTCHA}">
+                        <font color="red">
+                            ${requestScope.CAPTCHA}
+                        </font>                        
+                    </c:if>
+                </div>                
                 <hr>
                 <div>
                     <div>
@@ -51,6 +60,7 @@
                     </div>
                 </div>
             </form>
+
         </div>
         <div class="backLink">
             <a href="CarLoadServlet">back to Home Page</a>

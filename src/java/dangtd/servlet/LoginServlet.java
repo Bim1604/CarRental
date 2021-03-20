@@ -9,6 +9,7 @@ import com.restfb.types.User;
 import dangtd.carrentaldao.TblUserDAO;
 import dangtd.carrentaldto.TblUserDTO;
 import dangtd.loginfb.RestFB;
+import dangtd.recapcha.VerifyRecaptcha;
 import dangtd.verify.GmailSend;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -54,36 +55,47 @@ public class LoginServlet extends HttpServlet {
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
         HttpSession session = request.getSession(true);
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        System.out.println("s" + gRecaptchaResponse);
+        boolean verify = VerifyRecaptcha.verify(gRecaptchaResponse);
+        System.out.println("v" + verify);
         String url = map.get(loginPage);
         try {
             TblUserDAO dao = new TblUserDAO();
             if (code == null || code.isEmpty()) {
+//                    login 
                 if (username.isEmpty() || password.isEmpty()) {
                     String msg = "Please fill all information !!";
                     request.setAttribute("LOGINFAILED", msg);
                 } else {
-                    String name = dao.checkLogin(username, password);
-                    if (name != null) {
-                        boolean statusAccount = dao.checkStatusAccount(username);
-                        if (statusAccount) {
-                            session.setAttribute("NAME", name);
-                            session.setAttribute("EMAIL", username);
-                            url = map.get(carPage);
+                    if (verify) {
+                        String name = dao.checkLogin(username, password);
+                        if (name != null) {
+                            boolean statusAccount = dao.checkStatusAccount(username);
+                            if (statusAccount) {
+                                session.setAttribute("NAME", name);
+                                session.setAttribute("EMAIL", username);
+                                url = map.get(carPage);
+                            } else {
+                                session.setAttribute("NAME", name);
+                                session.setAttribute("EMAIL", username);
+                                GmailSend mail = new GmailSend();
+                                String codeVerify = mail.sendEmail(username);
+                                TblUserDTO dto = new TblUserDTO(username, password, "", name, "", codeVerify);
+                                session.setAttribute("VERIFYACCOUNT", dto);
+                                url = map.get(activePage);
+                            }
                         } else {
-                            session.setAttribute("NAME", name);
-                            session.setAttribute("EMAIL", username);
-                            GmailSend mail = new GmailSend();
-                            String codeVerify = mail.sendEmail(username);
-                            TblUserDTO dto = new TblUserDTO(username, password, "", name, "", codeVerify);
-                            session.setAttribute("VERIFYACCOUNT", dto);
-                            url = map.get(activePage);
+                            String msg = "Invalid password or username !!";
+                            request.setAttribute("LOGINFAILED", msg);
                         }
                     } else {
-                        String msg = "Invalid password or username !!";
-                        request.setAttribute("LOGINFAILED", msg);
+                        String msg = "You must check Captcha";
+                        request.setAttribute("CAPTCHA", msg);
                     }
                 }
             } else {
+//                login with fb
                 String accessToken = RestFB.getToken(code, "http://localhost:8084/CarRental/Login");
                 User user = RestFB.getUserInfo(accessToken);
                 username = user.getId();
