@@ -56,6 +56,10 @@
         <servlet-name>CartRemoveServlet</servlet-name>
         <servlet-class>dangtd.servlet.CartRemoveServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>HistoryServlet</servlet-name>
+        <servlet-class>dangtd.servlet.HistoryServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -99,6 +103,10 @@
     <servlet-mapping>
         <servlet-name>CartRemoveServlet</servlet-name>
         <url-pattern>/CartRemoveServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HistoryServlet</servlet-name>
+        <url-pattern>/HistoryServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

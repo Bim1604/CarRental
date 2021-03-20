@@ -1,6 +1,6 @@
 <%-- 
-    Document   : display
-    Created on : Mar 16, 2021, 4:55:43 PM
+    Document   : history
+    Created on : Mar 20, 2021, 3:43:23 PM
     Author     : Admin
 --%>
 
@@ -12,12 +12,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="CSS/C.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-        <title>Car display</title>
+        <title>History Page</title>
     </head>
-    <body <c:if test="${not empty requestScope.CHECKOUTSUCCESS}">
-            onload="getCheckOutMsg()"
-        </c:if>>
-        <!-- header -->
+    <body>
         <div class="header">
             <ul>
                 <li>
@@ -42,9 +39,6 @@
                     </li>
                     <li>
                         <a href="CartServlet">View Cart</a>
-                    </li>
-                    <li>
-                        <a href="HistoryServlet">History</a>
                     </li>
                     <li>
                         <form action="Log">
@@ -80,42 +74,69 @@
                 </ul>
             </form>
         </div>
-        <!-- Load Car Data -->
-        <c:set var="result" value="${sessionScope.LISTCAR}" />
-        <c:if test="${not empty result}">
-            <form action="Add">
-                <table class="listCar">
-                    <c:forEach var="dto" items="${result}">
-                        <tbody>
-                        <td>  
-                            <c:url var="urlRewriting" value="DetailsCarServlet">
-                                <c:param name="pk" value="${dto.carID}" />
-                            </c:url>
-                            <a href="${urlRewriting}"><img src="image/${dto.img}"></a>
-                            <div>
-                                ${dto.carName}(${dto.year}): ${dto.price}$
-                            </div>
-                            <div>
-                                <input type="hidden" name="pk" value="${dto.carID}" />
-                                <input type="submit" value="Rent" />
-                            </div>
-                        </td>                                                                  
-                        </tbody>
-                    </c:forEach>  
-                </table>    
-            </form> 
-            <div class="pageIndex">
-                <c:forEach begin="1" end="${sessionScope.CARPAGEEND}" var="indexPage">
-                    <div>
-                        <a href="CarLoadServlet?txtPageIndex=${indexPage}">${indexPage}</a>
-                    </div>
-                </c:forEach>
-            </div>       
-        </c:if>  
-        <script>
-            function getCheckOutMsg() {
-                alert("${requestScope.CHECKOUTSUCCESS}");
-            }
-        </script>
+        <!-- Load List History -->
+        <c:set var="history" value="${sessionScope.HISTORYLIST}" />
+        <c:if test="${not empty history}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>
+                            Bill ID
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            User ID 
+                        </th>
+                        <th>
+                            Rental Date
+                        </th>
+                        <th>
+                            Return Date
+                        </th>
+                        <th>
+                            Price Total 
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="dto" items="${history}">
+                        <c:forEach var="rentalDTO" items="${sessionScope.RENTALLIST}">
+                            <c:if test="${dto.billID eq rentalDTO.billID}">
+                                <tr>
+                                    <td>
+                                        ${dto.billID}
+                                    </td>
+                                    <td>
+                                        ${dto.action}
+                                    </td>
+                                    <td>
+                                        ${dto.status}
+                                    </td>
+                                    <td>
+                                        ${dto.email}
+                                    </td>
+                                    <td>
+                                        ${rentalDTO.rentalDate}
+                                    </td>
+                                    <td>
+                                        ${rentalDTO.returnDate}
+                                    </td>
+                                    <td>
+                                        ${rentalDTO.priceTotal}
+                                    </td>
+                                </tr>
+                            </c:if>                            
+                        </c:forEach>                        
+                    </c:forEach>
+
+                </tbody>
+            </table>
+
+        </c:if>
     </body>
 </html>

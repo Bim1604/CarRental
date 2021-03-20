@@ -5,7 +5,7 @@
  */
 package dangtd.carrentaldao;
 
-import dangtd.carrentaldto.TblRentalDTO;
+import dangtd.carrentaldto.TblHistoryDTO;
 import dangtd.unities.DBHelper;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -20,86 +20,93 @@ import javax.naming.NamingException;
  *
  * @author Admin
  */
-public class TblRentalDAO implements Serializable {
+public class TblHistoryDAO implements Serializable {
 
-    public boolean addRentalBill(int billID, int guestID, String rentalDate, String returnDate, float priceTotal) throws SQLException, NamingException {
+    public boolean addBillToHistory(int historyID, int billID, String action, boolean status, String email) throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement ps = null;
-
+        
         try {
             con = DBHelper.makeConnection();
-            String sql = "Insert into tblRental "
-                    + "(billID, guestID, rentalDate, returnDate, priceTotal) "
+            String sql = "Insert into tblHistory "
+                    + "(historyID, billID, action, status, email) "
                     + "Values (?,?,?,?,?)";
             ps = con.prepareStatement(sql);
-            ps.setInt(1, billID);
-            ps.setInt(2, guestID);
-            ps.setString(3, rentalDate);
-            ps.setString(4, returnDate);
-            ps.setFloat(5, priceTotal);
-            int row = ps.executeUpdate();
-            if (row > 0) {
+            ps.setInt(1, historyID);
+            ps.setInt(2, billID);
+            ps.setString(3, action);
+            ps.setBoolean(4, status);
+            ps.setString(5, email);
+            int rs = ps.executeUpdate();
+            if (rs > 0){
                 return true;
             }
-        } finally {
-            if (ps != null) {
+        } finally{
+            if (ps != null){
                 ps.close();
             }
-            if (con != null) {
+            if (con != null){
                 con.close();
             }
         }
         return false;
     }
-
-//    Lấy billID lớn nhât
-    public int getBillID() throws SQLException, NamingException {
+    
+//    Lấy historyID lớn nhất
+    public int getHistoryID() throws SQLException, NamingException{
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             con = DBHelper.makeConnection();
-            String sql = "Select MAX(billID) "
-                    + "From tblRental ";
+            String sql = "Select MAX(historyID) "
+                    + "From tblhistory ";
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
-            if (rs.next()) {
-                int billID = rs.getInt(1);
-                return ++billID;
+            if (rs.next()){
+                int historyID = rs.getInt(1);
+                return ++historyID;
             }
         } finally {
-            if (rs != null) {
+            if (rs != null){
                 rs.close();
             }
-            if (ps != null) {
+            if (ps != null){
                 ps.close();
             }
-            if (con != null) {
+            if (con != null){
                 con.close();
             }
         }
         return 1;
     }
     
-//    Lấy bill
-    public void getRentalBill(int billID) throws SQLException, NamingException{
+    private List<TblHistoryDTO> list;
+
+    public List<TblHistoryDTO> getList() {
+        return list;
+    }
+    
+//    Lấy lịch sử thao tác
+     public void getHistory(String userID) throws SQLException, NamingException{
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             con = DBHelper.makeConnection();
-            String sql = "Select billID, guestID, rentalDate, returnDate, priceTotal "
-                    + "From tblRental "
-                    + "Where billID = ?";
+            String sql = "Select historyID, billID, action, status, email "
+                    + "From tblHistory "
+                    + "Where email = ?";
             ps = con.prepareStatement(sql);
-            ps.setInt(1, billID);
+            ps.setString(1, userID);
             rs = ps.executeQuery();
-            if (rs.next()){
-                int guestID = rs.getInt(2);
-                String rentalDate = rs.getString(3);
-                String returnDate = rs.getString(4);
-                float priceTotal = rs.getFloat(5);
-                TblRentalDTO dto = new TblRentalDTO(billID, guestID, rentalDate, returnDate, priceTotal);
+            while (rs.next()){
+                int historyID = rs.getInt(1);
+                int billID = rs.getInt(2);
+                String action = rs.getString(3);
+                boolean status = rs.getBoolean(4);
+                String email = rs.getString(5);
+                TblHistoryDTO dto = new TblHistoryDTO(historyID, billID, action, status, email);
                 if (this.list == null){
                     this.list = new ArrayList<>();
                 }
@@ -117,11 +124,4 @@ public class TblRentalDAO implements Serializable {
             }
         }
     }
-    private List<TblRentalDTO> list;
-
-    public List<TblRentalDTO> getList() {
-        return list;
-    }
-    
-    
 }

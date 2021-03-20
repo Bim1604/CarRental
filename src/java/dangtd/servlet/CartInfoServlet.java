@@ -8,6 +8,7 @@ package dangtd.servlet;
 import dangtd.carrentaldao.TblCarDAO;
 import dangtd.carrentaldao.TblDetailsRentDAO;
 import dangtd.carrentaldao.TblGuestDAO;
+import dangtd.carrentaldao.TblHistoryDAO;
 import dangtd.carrentaldao.TblRentalDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -60,44 +61,52 @@ public class CartInfoServlet extends HttpServlet {
         String returnDate = request.getParameter("txtReturnDate");
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("EMAIL");
+        String action = request.getParameter("btAction");
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
         List<String> listMSG = new ArrayList<>();
         String url = map.get(displayPage);
         try {
-            TblCarDAO carDAO = new TblCarDAO();
+//            Tính tổng bill
+            float totalAll = 0;
             for (int i = 0; i < carID.length; i++) {
                 amount[i] = Integer.parseInt(txtAmount[i]);
                 total[i] = Float.parseFloat(txtTotal[i]);
-                //            Kiểm tra số lượng 
-                int quantity = carDAO.getQuantity(carID[i]);
-                if (quantity >= amount[i]) {
+                totalAll += total[i];
+            }
+            TblCarDAO carDAO = new TblCarDAO();
 //            Thông tin khách hàng
-                    TblGuestDAO guestDAO = new TblGuestDAO();
-                    int guestID = guestDAO.getGuestID();
-                    boolean rsGuest = guestDAO.addGuestInfo(guestID, guestName, phone, address);
-                    if (rsGuest) {
+            TblGuestDAO guestDAO = new TblGuestDAO();
+            int guestID = guestDAO.getGuestID();
+            boolean rsGuest = guestDAO.addGuestInfo(guestID, guestName, phone, address);
+            if (rsGuest) {
 //            bill thuê xe
-                        TblRentalDAO rentalDAO = new TblRentalDAO();
-                        int billID = rentalDAO.getBillID();
-                        boolean rsRental = rentalDAO.addRentalBill(billID, guestID, rentalDate, returnDate, guestID, email);
-                        if (rsRental) {
-
+                TblRentalDAO rentalDAO = new TblRentalDAO();
+                int billID = rentalDAO.getBillID();
+                boolean rsRental = rentalDAO.addRentalBill(billID, guestID, rentalDate, returnDate, totalAll);
+                if (rsRental) {
+                    for (int i = 0; i < carID.length; i++) {
+                        //            Kiểm tra số lượng 
+                        int quantity = carDAO.getQuantity(carID[i]);
+                        if (quantity >= amount[i]) {
                             TblDetailsRentDAO detailsDAO = new TblDetailsRentDAO();
                             float price = carDAO.getPriceCar(carID[i]);
-                            boolean rsDetails = detailsDAO.addDetailsRent(billID, carID[i], amount[i], price, total[i]);
-                            if (rsDetails) {
-                                String msg = "Rent Car Sucessfully";
-                                request.setAttribute("CHECKOUTSUCCESS", msg);
-                            }
+                            detailsDAO.addDetailsRent(billID, carID[i], amount[i], price, total[i]);
+                        } else {
+                            String carName = carDAO.getCarName(carID[i]);
+                            int remainQuantity = carDAO.getQuantity(carID[i]);
+                            url = map.get(cartPage);
+                            String msg = carName + " is over amount. Quantity 's remain is " + remainQuantity;
+                            listMSG.add(msg);
                         }
                     }
-                } else {
-                    String carName = carDAO.getCarName(carID[i]);
-                    int remainQuantity = carDAO.getQuantity(carID[i]);
-                    url = map.get(cartPage);
-                    String msg = carName + " is over amount. Quantity 's remain is " + remainQuantity;
-                    listMSG.add(msg);
+                }
+                TblHistoryDAO historyDAO = new TblHistoryDAO();
+                int historyID = historyDAO.getHistoryID();
+                boolean rsHistory = historyDAO.addBillToHistory(historyID, billID, action, true, email);
+                if (rsHistory) {
+                    String msg = "Rent Car Sucessfully";
+                    request.setAttribute("CHECKOUTSUCCESS", msg);
                 }
             }
             request.setAttribute("MSG", listMSG);

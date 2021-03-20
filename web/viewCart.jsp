@@ -176,7 +176,7 @@
                                 </table>
                                 <div>
                                     <!-- <input id="Confirm" type="submit" value="Confirm"/> -->
-                                    <button id="Confirm" type="submit">Confirm</button>
+                                    <button id="Confirm" type="submit" value="Rent" name="btAction">Confirm</button>
                                 </div>
                             </div>
                         </c:if>

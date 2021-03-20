@@ -14,21 +14,19 @@ import java.io.Serializable;
 public class TblRentalDTO implements Serializable{
     private int billID; 
     private int guestID; 
-    private String retalDate;
+    private String rentalDate;
     private String returnDate;
     private float priceTotal;
-    private String email;
 
     public TblRentalDTO() {
     }
 
-    public TblRentalDTO(int billID, int guestID, String retalDate, String returnDate, float priceTotal, String email) {
+    public TblRentalDTO(int billID, int guestID, String rentalDate, String returnDate, float priceTotal) {
         this.billID = billID;
         this.guestID = guestID;
-        this.retalDate = retalDate;
+        this.rentalDate = rentalDate;
         this.returnDate = returnDate;
         this.priceTotal = priceTotal;
-        this.email = email;
     }
 
     /**
@@ -60,17 +58,17 @@ public class TblRentalDTO implements Serializable{
     }
 
     /**
-     * @return the retalDate
+     * @return the rentalDate
      */
-    public String getRetalDate() {
-        return retalDate;
+    public String getRentalDate() {
+        return rentalDate;
     }
 
     /**
-     * @param retalDate the retalDate to set
+     * @param rentalDate the rentalDate to set
      */
-    public void setRetalDate(String retalDate) {
-        this.retalDate = retalDate;
+    public void setRentalDate(String rentalDate) {
+        this.rentalDate = rentalDate;
     }
 
     /**
@@ -101,19 +99,5 @@ public class TblRentalDTO implements Serializable{
         this.priceTotal = priceTotal;
     }
 
-    /**
-     * @return the email
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * @param email the email to set
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
     
 }

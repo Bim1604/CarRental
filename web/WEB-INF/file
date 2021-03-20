@@ -15,3 +15,4 @@ Add=AddItemToCartServlet
 CartInfo=CartInfoServlet
 CartDispatch=CartDispatchServlet
 CartRemove=CartRemoveServlet
+history=history.jsp

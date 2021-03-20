@@ -17,7 +17,7 @@ import javax.naming.NamingException;
  * @author Admin
  */
 public class TblDetailsRentDAO implements Serializable{
-    public boolean addDetailsRent(int billID, String carID, int amount, float price, float total) throws SQLException, NamingException{
+    public void addDetailsRent(int billID, String carID, int amount, float price, float total) throws SQLException, NamingException{
         Connection con = null;
         PreparedStatement ps = null;
         
@@ -32,10 +32,7 @@ public class TblDetailsRentDAO implements Serializable{
             ps.setInt(3, amount);
             ps.setFloat(4, price);
             ps.setFloat(5, total);
-            int row = ps.executeUpdate();
-            if (row > 0){
-                return true;
-            }
+            ps.execute();
         } finally {
             if (ps != null){
                 ps.close();
@@ -44,6 +41,5 @@ public class TblDetailsRentDAO implements Serializable{
                 con.close();
             }
         }
-        return false;
     }
 }
