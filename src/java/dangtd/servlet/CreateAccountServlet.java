@@ -33,7 +33,7 @@ public class CreateAccountServlet extends HttpServlet {
 
     private final String verifyPage = "verify";
     private final String createPage = "create";
-
+    private final String loginPage = "login"; 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -105,7 +105,8 @@ public class CreateAccountServlet extends HttpServlet {
                     }
                 } catch (SQLException ex) {
                     if (ex.getMessage().contains("duplicate")) {
-                        request.setAttribute("MSG", "This Facebook is ");
+                        url = map.get(loginPage);
+                        request.setAttribute("MSG", "This Facebook account is duplicatied");
                     }
 //                        LOGGER.error("CreateRecordServlet_SQLException: " + ex.getMessage());
                 }

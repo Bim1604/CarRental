@@ -5,10 +5,11 @@
         <group>
             <file>file:/D:/FPT/CarRental/web/viewCart.jsp</file>
             <file>file:/D:/FPT/CarRental/web/WEB-INF/file</file>
-            <file>file:/D:/FPT/CarRental/src/java/dangtd/servlet/LoginServlet.java</file>
-            <file>file:/D:/FPT/CarRental/src/java/dangtd/carrentaldao/TblRentalDAO.java</file>
-            <file>file:/D:/FPT/CarRental/src/java/dangtd/servlet/CartInfoServlet.java</file>
-            <file>file:/D:/FPT/CarRental/src/java/dangtd/carrentaldto/TblRentalDTO.java</file>
+            <file>file:/D:/FPT/CarRental/web/createAccount.jsp</file>
+            <file>file:/D:/FPT/CarRental/src/java/dangtd/servlet/CreateAccountServlet.java</file>
+            <file>file:/D:/FPT/CarRental/web/login.jsp</file>
+            <file>file:/D:/FPT/CarRental/web/verifyPage.jsp</file>
+            <file>file:/D:/FPT/CarRental/web/display.jsp</file>
         </group>
     </open-files>
 </project-private>

@@ -5,6 +5,93 @@
     background-color: rgba(190, 196, 196, 0.925);
     display: flex;
     justify-content: space-evenly;
+    color: #0a0acc;
+}
+.header a{
+    text-decoration: none;
+    color: #0a0acc;
+}
+.header a:hover{
+    color: #69a3a5;
+}
+.header ul{
+    list-style: none;
+    display: flex;}
+.header ul li{
+    margin: 5px 15px;
+}
+.header input{
+    border-radius: 6px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+.header input:hover{
+    background-color: #e6c6c6;
+}
+/* Search */
+.searchBar{
+    background-color: #cfc8f3;
+    padding-left: 550px;
+    display: block;
+}
+.searchBar ul{
+    list-style: none;
+    display: block;    
+}
+.listCar img{
+    width: 250px;
+    height: 150px;
+}
+.listCar{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-left: 250px;
+    text-align: center;
+}
+.listCar tbody{
+    margin-right: 25px;
+    margin-left: 25px;
+}
+.listCar td{
+    width: 250px;
+    height: 200px;
+    border: 1px solid #d8c8c8;
+}
+.pageIndex{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-left: 490px;
+    margin-top: 50px;
+}
+.pageIndex div{
+    margin-right: 10px;
+    background-color: #19f3e4;    
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+    clip-path: circle(50%);
+    text-align: center;
+}
+.pageIndex div a{
+    position: relative;
+    top: 5px;
+    text-decoration: none;
+}
+
+.pageIndex div:hover{
+    background-color: #a1f366;
+    cursor: pointer;
+}
+/* Login */
+/* thanh task header */
+.header{
+    width: 100%;
+    height: 10%;
+    background-color: rgba(190, 196, 196, 0.925);
+    display: flex;
+    justify-content: space-evenly;
 }
 .header ul{
     list-style: none;
@@ -13,9 +100,258 @@
     margin: 5px 15px;
 }
 /* Search */
-.searchBody{
-    margin-left: 350px;
+.searchBar{
+    background-color: #cfc8f3;
+    padding-left: 550px;
+    display: block;
 }
-.searchBody img{
-    width: 200px;
+.searchBar ul{
+    list-style: none;
+    display: block;    
+}
+.listCar img{
+    width: 250px;
+    height: 150px;
+}
+.listCar{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-left: 250px;
+    text-align: center;
+}
+.listCar tbody{
+    margin-right: 25px;
+    margin-left: 25px;
+}
+.listCar td{
+    width: 250px;
+    height: 200px;
+    border: 1px solid #d8c8c8;
+}
+.pageIndex{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-left: 490px;
+    margin-top: 50px;
+}
+.pageIndex div{
+    margin-right: 10px;
+    background-color: #19f3e4;    
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+    clip-path: circle(50%);
+    text-align: center;
+}
+.pageIndex div a{
+    position: relative;
+    top: 5px;
+    text-decoration: none;
+}
+
+.pageIndex div:hover{
+    background-color: #a1f366;
+    cursor: pointer;
+}
+/* Login */
+.loginBody{
+    margin-left: 460px;
+    border: 1px solid black;
+    width: 430px;
+    height: 190px;
+    padding-left: 10px;
+    margin-top: 160px;
+    margin-bottom: 180px;
+    background-color: #1fa1ca;
+    color: white;
+}
+.loginBody input{
+    margin-bottom: 10px;
+    width: 160px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1px solid black;   
+    margin-right: 5px; 
+}
+.loginBody input:hover{
+    background-color: #f1d8d8;
+}
+.loginBody button{
+    height: 34px;
+    border-radius: 6px;
+    border: 1px solid black;
+    width: 70px;
+    cursor: pointer;
+}
+.loginBody button:hover{
+    background-color: #bdbbbb;
+}
+.loginBody a{
+    text-decoration:none;
+    color: white;
+    margin-left: 130px;
+}
+.loginBody a:hover{
+    color: red;
+}
+.loginBar{
+    width: 100%;
+    height: 50px;
+    background-color: #cfc8f3;
+}
+.footer{
+    width: 100%;
+    height: 50px;
+    background-color: #cfc8f3;
+}
+.sfooter, .headerLogin{
+    width: 100%;
+    height: 50px;
+    background-color: rgba(190, 196, 196, 0.925);
+}
+/* create */
+.createBody{
+    margin-left: 460px;
+    border: 1px solid black;
+    width: 430px;
+    height: 250px;
+    padding-left: 10px;
+    margin-top: 160px;
+    margin-bottom: 190px;
+    background-color: #1fa1ca;
+    color: white;
+}
+.createBody input{
+    border: 1px solid black;
+    border-radius: 6px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 96%;
+}
+.createBody input:hover{
+    background-color: #f1d8d8;
+}
+.createBody button{
+    border: 1px solid black;
+    border-radius: 6px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+.createBody button:hover{
+    background-color: #dac3c3;
+}
+.backLink a{
+    text-decoration: none;
+    color: #1010f9;
+    position: relative;
+    top: -155px;
+    left: 460px;
+}
+.backLink a:hover{
+    color: #70cee0;
+}
+/* Verify */
+.verifyBody{
+    margin-left: 470px;
+    border: 1px solid black;
+    width: 430px;
+    height: 50px;
+    margin-top: 200px;
+    margin-bottom: 280px;
+    background-color: #1fa1ca;
+    color: white;
+    text-align:center;
+}
+.verifyBody input{
+    border-radius: 6px;
+    border: 1px solid black;
+}
+.verifyBody input:hover{
+    background-color: #ffdcdc;
+}
+.verifyBody button{
+    margin-top: 15px;
+    border-radius: 6px;
+    border: 1px solid black;
+}
+.verifyBody button:hover{
+    background-color: #e2c4c4;
+}
+/* checkout */
+.cartBody{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    position: relative;
+}
+.cartBody a{
+    text-decoration: none;
+    background-color: #ff010b;
+    color: white;
+}
+.cartBody a:hover{
+    background-color: #ff8888;
+}
+#CarTable{
+    margin-top: 50px;
+    text-align: center;
+    margin-left: 200px;
+}
+#CarTable td{
+    width: 50px;
+}
+.increase{
+    background-color: #9bff00f2;
+    cursor: pointer;
+    border: 1px solid black;
+    font-size: 25px;
+}
+.increase:hover{
+    background-color: #defb00f2;
+}
+.decrease{
+    background-color: #f18b0af2;
+    cursor: pointer;
+    border: 1px solid black;
+    font-size: 25px;
+}
+.decrease:hover{
+    background-color: #fbac49f2;
+    cursor: pointer;
+    border: 1px solid black;
+    font-size: 25px;
+}
+.amount{
+    font-size: 25px;
+}
+#GuestTable{
+    position: relative;
+    left: 300px;
+    top: 20px;
+}
+#GuestTable input{
+    min-width: 200px;
+}
+#phone{
+    position: relative;
+    left: 40px;
+}
+#address{
+    position: relative;
+    left: 28px;
+}
+#rentalDate{
+    position: relative;
+    left: 5px;
+}
+#returnDate{
+    position: relative;
+    left: 3px;
+}
+#discount{
+    position: relative;
+    left: 30px;
 }

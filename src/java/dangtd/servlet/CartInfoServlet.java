@@ -12,6 +12,8 @@ import dangtd.carrentaldao.TblRentalDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +31,10 @@ import javax.servlet.http.HttpSession;
  * @author Admin
  */
 public class CartInfoServlet extends HttpServlet {
+
     private final String displayPage = "";
+    private final String cartPage = "view";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -57,32 +62,45 @@ public class CartInfoServlet extends HttpServlet {
         String email = (String) session.getAttribute("EMAIL");
         ServletContext context = request.getServletContext();
         Map<String, String> map = (Map<String, String>) context.getAttribute("MAP");
+        List<String> listMSG = new ArrayList<>();
         String url = map.get(displayPage);
         try {
+            TblCarDAO carDAO = new TblCarDAO();
+            for (int i = 0; i < carID.length; i++) {
+                amount[i] = Integer.parseInt(txtAmount[i]);
+                total[i] = Float.parseFloat(txtTotal[i]);
+                //            Kiểm tra số lượng 
+                int quantity = carDAO.getQuantity(carID[i]);
+                if (quantity >= amount[i]) {
 //            Thông tin khách hàng
-            TblGuestDAO guestDAO = new TblGuestDAO();
-            int guestID = guestDAO.getGuestID();
-            boolean rsGuest = guestDAO.addGuestInfo(guestID, guestName, phone, address);
-            if (rsGuest) {
+                    TblGuestDAO guestDAO = new TblGuestDAO();
+                    int guestID = guestDAO.getGuestID();
+                    boolean rsGuest = guestDAO.addGuestInfo(guestID, guestName, phone, address);
+                    if (rsGuest) {
 //            bill thuê xe
-                TblRentalDAO rentalDAO = new TblRentalDAO();
-                int billID = rentalDAO.getBillID();
-                boolean rsRental = rentalDAO.addRentalBill(billID, guestID, rentalDate, returnDate, guestID, email);
-                if (rsRental) {
-                    for (int i = 0; i < carID.length; i++) {
-                        amount[i] = Integer.parseInt(txtAmount[i]);
-                        total[i] = Float.parseFloat(txtTotal[i]);
-                        TblDetailsRentDAO detailsDAO = new TblDetailsRentDAO();
-                        TblCarDAO carDAO = new TblCarDAO();
-                        float price = carDAO.getPriceCar(carID[i]);
-                        boolean rsDetails = detailsDAO.addDetailsRent(billID, carID[i], amount[i], price , total[i]);
-                        if (rsDetails){
-                            String msg = "Rent Car Sucessfully";
-                            request.setAttribute("CHECKOUTSUCCESS", msg);
+                        TblRentalDAO rentalDAO = new TblRentalDAO();
+                        int billID = rentalDAO.getBillID();
+                        boolean rsRental = rentalDAO.addRentalBill(billID, guestID, rentalDate, returnDate, guestID, email);
+                        if (rsRental) {
+
+                            TblDetailsRentDAO detailsDAO = new TblDetailsRentDAO();
+                            float price = carDAO.getPriceCar(carID[i]);
+                            boolean rsDetails = detailsDAO.addDetailsRent(billID, carID[i], amount[i], price, total[i]);
+                            if (rsDetails) {
+                                String msg = "Rent Car Sucessfully";
+                                request.setAttribute("CHECKOUTSUCCESS", msg);
+                            }
                         }
                     }
+                } else {
+                    String carName = carDAO.getCarName(carID[i]);
+                    int remainQuantity = carDAO.getQuantity(carID[i]);
+                    url = map.get(cartPage);
+                    String msg = carName + " is over amount. Quantity 's remain is " + remainQuantity;
+                    listMSG.add(msg);
                 }
             }
+            request.setAttribute("MSG", listMSG);
         } catch (SQLException ex) {
             Logger.getLogger(CartInfoServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {

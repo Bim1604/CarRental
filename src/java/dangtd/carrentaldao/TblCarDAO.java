@@ -263,5 +263,64 @@ public class TblCarDAO implements Serializable {
         }
         return 0;
     }
-    
+//    Lấy số lượng xe còn để thuê
+    public int getQuantity(String carID) throws SQLException, NamingException{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "Select quantity "
+                    + "From tblCar "
+                    + "Where carID = ?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, carID);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (ps != null){
+                ps.close();
+            }
+            if (con != null){
+                con.close();
+            }
+        }
+        return 0;
+    }
+//    Lấy tên xe
+    public String getCarName(String carID) throws SQLException, NamingException{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "Select carName "
+                    + "From tblCar "
+                    + "Where carID = ?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, carID);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                return rs.getString(1);
+            }
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (ps != null){
+                ps.close();
+            }
+            if (con != null){
+                con.close();
+            }
+        }
+        return null;
+    }
 }

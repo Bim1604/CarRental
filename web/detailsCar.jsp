@@ -39,6 +39,9 @@
                         </font>
                     </li>
                     <li>
+                        <a href="CartServlet">View Cart</a>
+                    </li>
+                    <li>
                         <form action="Log">
                             <input type="submit" value="Logout" />
                         </form>                        
@@ -55,7 +58,7 @@
             </ul>
         </div>
         <div class="searchBody">
-            <form action="Search">
+            <form class="searchBar" action="Search">
                 <ul>
                     <li>
                         <input type="text" name="txtSearchValue" value="" placeholder="search car name" />
@@ -73,45 +76,42 @@
             </form>
         </div>
         <!--Load details car-->
-        <div>
-            <table border="1">
-                <c:forEach var="dto" items="${requestScope.DETAILSCAR}">
-                    <tbody>
-                    <form action="Add">
-                        <tr>
-                            <td>
-                                <img src="image/${dto.img}" /> 
-                            </td>
-                            <td>
-                                <div>
-                                    Car Name: ${dto.carName}
-                                </div>
-                                <div>
-                                    Car Color: ${dto.color}
-                                </div>
-                                <div>
-                                    Car year: ${dto.year}
-                                </div>
-                                <div>
-                                    Car category: ${dto.category}
-                                </div>
-                                <div>
-                                    Price: ${dto.price}$
-                                </div>
-                                <div>
-                                    Quantity: ${dto.quantity}
-                                </div>                        
-                                <div>
-                                    <input type="hidden" name="pk" value="${dto.carID}" />
-                                    <input type="submit" value="Rent" />
-                                    <a href="CartServlet">View Cart</a>
-                                </div>
-                            </td>
-                        </tr>
-                    </form>
-                    </tbody>
-                </c:forEach>
-            </table>
+        <div class="searchBody">
+            <form action="Add">
+                <table class="listCar">
+                    <c:forEach var="dto" items="${requestScope.DETAILSCAR}">
+                        <tbody>
+                        <td>
+                            <img src="image/${dto.img}" /> 
+                        </td>
+                        <td>
+                            <div>
+                                Car Name: ${dto.carName}
+                            </div>
+                            <div>
+                                Car Color: ${dto.color}
+                            </div>
+                            <div>
+                                Car year: ${dto.year}
+                            </div>
+                            <div>
+                                Car category: ${dto.category}
+                            </div>
+                            <div>
+                                Price: ${dto.price}$
+                            </div>
+                            <div>
+                                Quantity: ${dto.quantity}
+                            </div>                        
+                            <div>
+                                <input type="hidden" name="pk" value="${dto.carID}" />
+                                <input type="submit" value="Rent" />                                    
+                            </div>
+                        </td>
+                        </tbody>
+                    </c:forEach>
+                </table>
+            </form>
         </div>
         <div>
             <a href="CarLoadServlet">Return Car Display</a>

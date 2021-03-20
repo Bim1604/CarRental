@@ -10,26 +10,37 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="CSS/C.css">
         <title>Verify Page</title>
     </head>
     <body <c:if test="${not empty VERIFYFAILED}">
             onload="alertVerifyMessage()"
         </c:if>>
-        <div>
-            <div>
-                <form action="Verify" method="POST">
+        <div class="headerLogin">
+
+        </div>
+        <div class="loginBar">
+
+        </div>
+        <div class="verifyBody">
+            <form action="Verify" method="POST">
+                <div>
                     Input verify 's code 
-                    <input type="text" name="txtCode" value="" />
-                    <div>
-                        <input type="submit" value="Send" />
-                    </div>
-                </form>                
-            </div>
+                    <input type="text" name="txtCode" value="" />                    
+                    <button type="submit">Send</button>
+                </div>
+            </form>                
+        </div>
+        <div class="footer">
+
+        </div>
+        <div class="sfooter">
+
         </div>
     </body>
     <script>
         function alertVerifyMessage() {
-                alert("${requestScope.VERIFYFAILED}");
-            }
+            alert("${requestScope.VERIFYFAILED}");
+        }
     </script>
 </html>

@@ -22,7 +22,7 @@
                 </li>
                 <li>
                     <a href="facebook.com"><i class="fa fa-facebook-square" aria-hidden="true">FaceBook</i></a>
-                </li>
+                </li>                
                 <li>
                     <i class="fa fa-phone" aria-hidden="true"> 0852573133</i>
                 </li>
@@ -37,6 +37,9 @@
                         <font>
                         Welcome, ${sessionScope.NAME}
                         </font>
+                    </li>
+                    <li>
+                        <a href="CartServlet">View Cart</a>
                     </li>
                     <li>
                         <form action="Log">
@@ -55,7 +58,7 @@
             </ul>
         </div>
         <div class="searchBody">
-            <form action="Search">
+            <form class="searchBar" action="Search">
                 <ul>
                     <li>
                         <input type="text" name="txtSearchValue" value="${param.txtSearchValue}" placeholder="search car name" />
@@ -77,32 +80,30 @@
         <!-- Load Data Search -->
         <div class="searchBody">
             <c:if test="${not empty requestScope.LISTCARSEARCH}">
-                <table border="1">
-                    <tbody>
-                    <form action="Add">
+                <form action="Add">
+                    <table class="listCar">
                         <c:forEach var="dto" items="${requestScope.LISTCARSEARCH}">
-                            <tr>
-                                <td>  
-                                    <c:url var="urlRewriting" value="DetailsCarServlet">
-                                        <c:param name="pk" value="${dto.carID}" />
-                                    </c:url>
-                                    <a href="${urlRewriting}"><img src="image/${dto.img}"></a>  
-                                    <div>
-                                        ${dto.carName}(${dto.year}): ${dto.price}$
-                                    </div>
-                                    <div>
-                                        <input type="hidden" name="pk" value="${dto.carID}" />
-                                        <input type="submit" value="Rent" />
-                                    </div>
-                                </td>
-                            </tr>
+                            <tbody>
+                            <td>  
+                                <c:url var="urlRewriting" value="DetailsCarServlet">
+                                    <c:param name="pk" value="${dto.carID}" />
+                                </c:url>
+                                <a href="${urlRewriting}"><img src="image/${dto.img}"></a>  
+                                <div>
+                                    ${dto.carName}(${dto.year}): ${dto.price}$
+                                </div>
+                                <div>
+                                    <input type="hidden" name="pk" value="${dto.carID}" />
+                                    <input type="submit" value="Rent" />
+                                </div>
+                            </td> 
+                            </tbody>
                         </c:forEach>
-                    </form>
-                    </tbody>
-                </table>
+                    </table>
+                </form>
             </c:if>
         </div>
-        <div>
+        <div class="pageIndex">
             <c:forEach begin="1" end="${requestScope.ENDPAGE}" var="indexPage">
                 <div>
                     <a href="Search?txtSearchValue=${param.txtSearchValue}&txtCate=${param.txtCate}&txtPageIndex=${indexPage}">${indexPage}</a>
